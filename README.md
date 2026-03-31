@@ -19,8 +19,8 @@
 - 知识库创建、文件上传与基础检索
 - 支持 `PDF / DOCX / TXT / Markdown`
 - 支持 `OpenAI / 千问 / 豆包` 三种 Provider
-- 默认使用 `SQLite` 本地启动
-- 提供 `PostgreSQL` 的 `docker-compose` 开发入口
+- 默认使用 `PostgreSQL` 运行
+- 提供 `docker-compose` 开发入口
 
 ## Tech Stack
 
@@ -42,8 +42,7 @@
 AI 与数据层：
 
 - `OpenAI Python SDK`
-- `SQLite` 默认开发库
-- `PostgreSQL` 可选
+- `PostgreSQL`
 
 ## Project Structure
 
@@ -89,7 +88,13 @@ cp .env.example .env
 
 如果你要使用真实模型，请在 `.env` 中填入对应 Provider 的 Key。
 
-### 3. Start Backend
+### 3. Start PostgreSQL
+
+```bash
+docker compose up -d postgres
+```
+
+### 4. Start Backend
 
 ```bash
 cd backend
@@ -104,7 +109,7 @@ uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
 - `http://127.0.0.1:8000`
 - `http://127.0.0.1:8000/health`
 
-### 4. Start Frontend
+### 5. Start Frontend
 
 新开一个终端窗口：
 
@@ -118,7 +123,7 @@ npm run dev -- --host 127.0.0.1 --port 5173
 
 - `http://127.0.0.1:5173`
 
-### 5. Demo Account
+### 6. Demo Account
 
 默认演示账号：
 
@@ -167,31 +172,18 @@ ARK_API_KEY=your_ark_key
 
 ## PostgreSQL Development Setup
 
-默认开发环境使用 `SQLite`，不依赖额外数据库服务。
+默认开发环境已经切到 `PostgreSQL`。
 
-如果你想切换到 `PostgreSQL`：
-
-### 1. 启动 PostgreSQL
-
-```bash
-docker compose up -d postgres
-```
-
-### 2. 修改 `.env`
-
-把：
-
-```text
-DATABASE_URL=sqlite:///./storage/app.db
-```
-
-改成：
+如果你需要覆盖连接参数，可以在 `.env` 中修改以下配置：
 
 ```text
 DATABASE_URL=postgresql+psycopg://ai_user:ai_password@localhost:5432/ai_assistant
+POSTGRES_HOST=localhost
+POSTGRES_DB=ai_assistant
+POSTGRES_USER=ai_user
+POSTGRES_PASSWORD=ai_password
+POSTGRES_PORT=5432
 ```
-
-### 3. 重新启动后端
 
 ## Current Capabilities
 
@@ -245,4 +237,3 @@ DATABASE_URL=postgresql+psycopg://ai_user:ai_password@localhost:5432/ai_assistan
 - OpenAI Responses API
 - 阿里云百炼 OpenAI 兼容接口
 - 火山方舟 OpenAI 兼容接口
-

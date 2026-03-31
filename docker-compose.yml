@@ -1,6 +1,6 @@
 services:
   postgres:
-    image: postgres:16
+    image: m.daocloud.io/docker.io/library/postgres:16-alpine
     container_name: ai-assistant-postgres
     restart: unless-stopped
     environment:
@@ -11,4 +11,3 @@ services:
       - "${POSTGRES_PORT:-5432}:5432"
     volumes:
       - ./postgres-data:/var/lib/postgresql/data
-
